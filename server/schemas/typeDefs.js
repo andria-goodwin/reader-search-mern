@@ -1,42 +1,58 @@
-const { gql } = require('@apollo/server/express4');
+const { gql } = require('graphql-tag');
 
 const typeDefs = gql`
-    type User {
-        _id: ID!
-        username: String!
-        email: String!
-        bookCount: Int
-        savedBooks: [Book]
-    }
-    type Auth {
-        token: ID!
-        user: User
-    }
-    type Book {
-        bookId: ID!
-        authors: [String]
-        description: String
-        title: String
-        image: String
-        link: String
-    }
-    input InputBook {
-        bookId: String
-        authors: [String]
-        title: String
-        description: String
-        image: String
-        link: String
-    }
-    type Query {
-        me: User
-    }
-    type Mutation {
-        login(email: String!, password: String!): Auth
-        addUser(username: String!, email: String!, password: String!): Auth
-        saveBook(newBook: InputBook!): User
-        removeBook(bookId: ID!): User
-    }
+  type Query {
+    me: User
+  }
+
+  type Mutation {
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
+    saveBook(input: SaveBookInput!): User
+    removeBook(bookId: ID!): User
+  }
+
+  type User {
+  username: String!
+  email: String!
+  password: String!
+  savedBooks: [Book]
+  bookCount: Int
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+  type Book {
+  authors: [String]
+  description: String!
+  bookId: String!
+  image: String
+  link: String
+  title: String!
+  }
+
+  type Auth {
+    token: ID!
+    user: User
+  }
+
+  input SaveBookInput {
+    authors: [String]
+    description: String
+    title: String
+    bookId: ID
+    image: String
+    link: String
+  }
 `;
 
 module.exports = typeDefs;
